@@ -1,0 +1,12 @@
+{
+    "maxerr"        : 50,       // {int} Maximum error before stopping
+    "globals"       : {},       // additional predefined global variables
+    "browserify"    : true,     // Browserify (node.js code in the browser)
+    "browser"       : false,    // Web Browser (window, document, etc)
+    "node"          : false,    // Node.js
+    "globalstrict"  : true,     // true: Allow global "use strict" (also enables 'strict')
+    "es5"           : false,    // true: Allow ES5 syntax (ex: getters and setters)
+    "esnext"        : false,    // true: Allow ES.next (ES6) syntax (ex: `const`)
+    "maxlen"        : 80,       // {int} Max number of characters per line
+    "quotmark"      : "single"  // Quotation mark consistency:
+}
