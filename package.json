@@ -1,5 +1,5 @@
 {
-  "name": "collective",
+  "name": "media-collective",
   "version": "1.0.0",
   "description": "A JavaScript client for the Widen Collective",
   "main": "index.js",
@@ -48,7 +48,7 @@
     ]
   },
   "browserify": {
-    "name": "collective",
+    "name": "media-collective",
     "main": "index.js"
   },
   "scripts": {
