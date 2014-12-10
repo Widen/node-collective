@@ -157,6 +157,7 @@ var request = function request(method, path, query, options, callback){
                     buf.push(d);
                 });
                 res.on('error', function(e) {
+                    debug(e);
                     reject(e);
                 });
                 res.on('end', function(){
@@ -173,6 +174,7 @@ var request = function request(method, path, query, options, callback){
                         err.path = path;
                         err.statusCode = (err.code = res.statusCode);
                         err.res = res;
+                        debug(err);
                         reject(err);
                     }
                 });
@@ -219,6 +221,9 @@ var buffer = function buffer(method, path, query, options, callback){
                 var buf = [],
                     buffer;
                 res.on('data', function(d) {
+                    if (!Buffer.isBuffer(d)) {
+                        d = new Buffer(d);
+                    }
                     buf.push(d);
                 });
                 res.on('end', function(){
@@ -245,13 +250,7 @@ var json = function json(method, path, query, options, callback) {
 
     return buffer(method, path, query, options).then(function(res){
             if (res.body) {
-                var json_body = {};
-                try {
-                    json_body = JSON.parse(res.body.toString('utf-8'));
-                } catch (exception) {
-                } finally {
-                    res.body = json_body;
-                }
+                res.body = JSON.parse(res.body.toString('utf-8'));
             }
             return res;
         }).nodeify(callback);
