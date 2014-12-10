@@ -243,13 +243,7 @@ var json = function json(method, path, query, options, callback) {
 
     return buffer(method, path, query, options).then(function(res){
             if (res.body) {
-                var json_body = {};
-                try {
-                    json_body = JSON.parse(res.body.toString('utf-8'));
-                } catch (exception) {
-                } finally {
-                    res.body = json_body;
-                }
+                res.body = JSON.parse(res.body.toString('utf-8'));
             }
             return res;
         }).nodeify(callback);
