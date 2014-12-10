@@ -1,6 +1,6 @@
 {
   "name": "media-collective",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A JavaScript client for the Widen Collective",
   "main": "index.js",
   "directories": {
