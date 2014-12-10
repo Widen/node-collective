@@ -69,7 +69,8 @@
     "build": "npm run build-node && npm run build-browser",
     "build-browser": "browserify index.js --standalone collective > static/bundle.js && cat static/bundle.js | uglifyjs > static/bundle.min.js",
     "build-node": "echo \"Error: no 'build-node' task specified\" && exit 0",
-    "prepublish": "npm run build && git add static/bundle.*js && git commit -m 'version bump' && git push origin master --follow-tags"
+    "version": "npm run build && git add static/bundle.*js && git commit -m 'version bump' && git push origin master --follow-tags",
+    "prepublish": "npm run build"
   },
   "repository": {
     "type": "git",
