@@ -9,7 +9,7 @@ proxy like [corsproxy](https://www.npmjs.org/package/corsproxy) to bypass
 CORS restrictions for now.)
 
 [![License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](./LICENSE)[![Build
-Status](http://img.shields.io/travis/Widen/node-collective.svg?style=flat-square)](https://travis-ci.org/Widen/node-collective)[![node-collective](http://img.shields.io/npm/v/media-collective.svg?style=flat-square)]()
+Status](http://img.shields.io/travis/Widen/node-collective.svg?style=flat-square)](https://travis-ci.org/Widen/node-collective)[![node-collective](http://img.shields.io/npm/v/media-collective.svg?style=flat-square)](https://www.npmjs.com/package/media-collective)
 
 [Documentation](http://widen.github.io/node-collective/)
 
