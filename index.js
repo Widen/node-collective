@@ -155,6 +155,7 @@ var request = function request(method, path, query, options, callback){
                     buf.push(d);
                 });
                 res.on('error', function(e) {
+                    debug(e);
                     reject(e);
                 });
                 res.on('end', function(){
@@ -171,6 +172,7 @@ var request = function request(method, path, query, options, callback){
                         err.path = path;
                         err.statusCode = (err.code = res.statusCode);
                         err.res = res;
+                        debug(err);
                         reject(err);
                     }
                 });
