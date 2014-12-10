@@ -217,6 +217,9 @@ var buffer = function buffer(method, path, query, options, callback){
                 var buf = [],
                     buffer;
                 res.on('data', function(d) {
+                    if (!Buffer.isBuffer(d)) {
+                        d = new Buffer(d);
+                    }
                     buf.push(d);
                 });
                 res.on('end', function(){
