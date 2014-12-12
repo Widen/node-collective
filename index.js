@@ -147,8 +147,7 @@ var request = function request(method, path, query, options, callback){
                                   options);
                 return resolve(req);
             }
-            if (res.statusCode >= 400) {
-                debug('Recevied ' + res.statusCode + ' error');
+            if (res.statusCode === 0 || res.statusCode >= 400) {
                 var buf = [],
                     buffer;
                 res.on('data', function(d) {
@@ -166,13 +165,14 @@ var request = function request(method, path, query, options, callback){
                         res.body = buffer.toString('utf-8');
                     } catch (exception) {
                     } finally {
-                        var err_message = STATUS_CODES[res.statusCode];
+                        var err_message = STATUS_CODES[res.statusCode] ||
+                                          'UnknownHttpError';
                         err.name = err_message.replace(/ /g, '');
                         err.method = method;
                         err.path = path;
                         err.statusCode = (err.code = res.statusCode);
                         err.res = res;
-                        debug(err);
+                        log.debug(err);
                         reject(err);
                     }
                 });
