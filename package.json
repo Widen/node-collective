@@ -58,7 +58,7 @@
     "test-browser": "browserify --debug test/all-test.js | testling",
     "test-node": "tape test/all-test.js",
     "coverage": "npm run coverage-node && npm run coverage-browser",
-    "coverage-browser": "echo \"browserify --debug -t coverify test/all-test.js | node | coverify\" && exit 0",
+    "coverage-browser": "browserify --debug -t coverify test/all-test.js | node | coverify",
     "coverage-node": "covert test/all-test.js",
     "watch": "echo \"Error: no 'watch' task specified\" && exit 0",
     "watch-browser": "echo \"Error: no 'watch-browser' task specified\" && exit 0",
