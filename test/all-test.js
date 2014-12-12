@@ -69,7 +69,7 @@ test('Works with callbacks', function(t){
 });
 
 test('Errors', function(t){
-    t.plan(7);
+    t.plan(6);
 
     var query = {
         uuid: 'foobar',
@@ -77,7 +77,7 @@ test('Errors', function(t){
 
     collective('GET', '/woot/:uuid', query, options, function(err, res){
         if (err) {
-            t.assert(err.statusCode && err.statusCode >= 400,
+            t.assert(err.statusCode >= 0,
                      'Error object property statusCode');
             t.assert(err.name && err.name.length > 0,
                      'Error object property name');
@@ -85,11 +85,13 @@ test('Errors', function(t){
                      'Error object property path');
             t.assert(err.method && err.method.length > 0,
                      'Error object property method');
-            t.assert(err.res && err.res.statusCode >= 400,
+            t.assert(err.res && err.res.statusCode >= 0,
                      'Error object property res (response)');
             t.assert(err instanceof Error ,
-                     'Error object is an instace of an Error');
-            t.pass('Handles and returns errors');
+                     'Error object is an instance of an Error');
+        }
+        else {
+            t.fail('Need an error');
         }
     });
 
