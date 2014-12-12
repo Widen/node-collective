@@ -143,9 +143,9 @@ var request = function request(method, path, query, options, callback){
                 options.protocol = location.protocol.substring(0,
                                             location.protocol.length - 1);
                 options.host = location.host;
-                var req = request(method, location.pathname, query,
+                var redirect_request = request(method, location.pathname, query,
                                   options);
-                return resolve(req);
+                return resolve(redirect_request);
             }
             if (res.statusCode === 0 || res.statusCode >= 400) {
                 var buf = [],
