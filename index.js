@@ -245,7 +245,7 @@ var buffer = function buffer(method, path, query, options, callback){
                 buf.push(d);
             });
             res.on('end', function(){
-                log.debug('Buffer allocated', e);
+                log.debug('Buffer allocated');
                 buffer = new Buffer.concat(buf);
                 res.body = buffer;
                 resolve(res);
