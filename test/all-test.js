@@ -360,21 +360,3 @@ test('Throws error on unrecognized auth type', function(t) {
     });
 
 });
-
-test('setTimeout', function(t) {
-    t.plan(1);
-
-    var query = {
-        uuid: 'efad1d0d-fadf-4a2a-97b7-4f6d453c2d93',
-    };
-
-    var new_options = options;
-    new_options.timeout = 1;
-
-    collective('GET', '/address/saved/uuid/:uuid', query, new_options)
-    .then(function(){
-        t.pass('Timeout applied');
-    });
-
-});
-
