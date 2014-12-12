@@ -6,12 +6,24 @@ var http = require('http'),
     url = require('url'),
     assert = require('assert');
 
-var debug = require('debug')('collective'),
-    promise = require('promise');
+var promise = require('promise'),
+    console_stream = require('console-stream'),
+    bole = require('bole'),
+    pretty = require('bistre')();
 
 var STATUS_CODES = http.STATUS_CODES,
     PROTOCOLS = { 'http': http, 'https': https },
     PORTS = { http: 80, https: 443 };
+
+var logLevel = 'info';
+if (process.env.NODE_ENV &&
+    ('dev|debug').indexOf(process.env.NODE_ENV.toLowerCase() !== -1)) {
+    logLevel = 'debug';
+}
+var log = bole('collective');
+bole.output({ level: logLevel, stream: pretty });
+pretty.pipe(console_stream());
+
 
 /**
  * request
@@ -73,12 +85,12 @@ var request = function request(method, path, query, options, callback){
 
         var body;
         if (hasBody){
-            debug('Detected request body');
+            log.debug('Detected request body data');
             body = JSON.stringify(query) + '\n';
             headers['content-length'] = Buffer.byteLength(body, 'utf-8');
             headers['content-type'] = 'application/json; charset=utf-8';
         } else if (query !== null){
-            debug('Detected URL query data');
+            log.debug('Detected URL query data');
             headers['content-type'] = 'text/plain; charset=utf-8';
             body = qs.stringify(query);
             if (body.length){
@@ -87,23 +99,23 @@ var request = function request(method, path, query, options, callback){
         }
 
         if (options.auth) {
-            debug('Detected auth');
+            log.debug('Detected auth');
             switch (options.auth.type) {
                 case 'oauth':
-                    debug('Detected oauth');
+                    log.debug('Detected oauth');
                     path += (path.indexOf('?') === -1 ? '?' : '&') +
                         'access_token=' +
                         encodeURIComponent(options.auth.token);
                     break;
                 case 'basic':
-                    debug('Detected basic auth');
+                    log.debug('Detected basic auth');
                     headers.authorization = 'Basic ' + new Buffer(
                         options.auth.username +
                         ':' +
                         options.auth.password, 'ascii').toString('base64');
                     break;
                 case 'bearer':
-                    debug('Detected bearer token');
+                    log.debug('Detected bearer token');
                     headers.Authorization = 'Bearer ' + options.auth.bearer;
                     break;
                 default:
@@ -122,11 +134,11 @@ var request = function request(method, path, query, options, callback){
 
         var full_path = '/api/rest' + path;
 
-        debug('Protocol: ' + protocol);
-        debug('Host: ' + host);
-        debug('Port: ' + port);
-        debug('Method: ' + method);
-        debug('Path: ' + full_path);
+        log.debug('Protocol: ' + protocol);
+        log.debug('Host: ' + host);
+        log.debug('Port: ' + port);
+        log.debug('Method: ' + method);
+        log.debug('Path: ' + full_path);
 
         var req = PROTOCOLS[protocol].request({
             host: host,
@@ -144,8 +156,9 @@ var request = function request(method, path, query, options, callback){
                 reject(e);
             });
 
+            log.debug('Response status: ' + res.statusCode);
             if ([301,302,307].indexOf(res.statusCode) !== -1) {
-                debug('Recevied ' + res.statusCode + ' redirect');
+                log.debug('Recevied ' + res.statusCode + ' redirect');
                 var location = url.parse(res.headers.location);
                 options.protocol = location.protocol.substring(0,
                                             location.protocol.length - 1);
@@ -189,17 +202,17 @@ var request = function request(method, path, query, options, callback){
         });
 
         req.on('error', function(e){
-            debug('Error', e);
+            log.error('Request error', e);
             reject(e);
         });
 
         if (hasBody){
-            debug('Writing body');
+            log.debug('Request send body');
             req.end(body);
-            debug('Request ended');
+            log.debug('Request end');
         } else {
-            debug('Request ended');
             req.end();
+            log.debug('Request end');
         }
 
    }).nodeify(callback);
@@ -221,17 +234,20 @@ var buffer = function buffer(method, path, query, options, callback){
             var buf = [],
                 buffer;
             res.on('data', function(d) {
+                log.debug('Data received', d);
                 if (!Buffer.isBuffer(d)) {
                     d = new Buffer(d);
                 }
                 buf.push(d);
             });
             res.on('end', function(){
+                log.debug('Buffer allocated', e);
                 buffer = new Buffer.concat(buf);
                 res.body = buffer;
                 resolve(res);
             });
             res.on('error', function(e){
+                log.error('Buffer allocation error', e);
                 reject(e);
             });
         });
