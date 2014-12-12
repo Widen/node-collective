@@ -21,6 +21,9 @@
     "widen"
   ],
   "dependencies": {
+    "bistre": "^1.0.1",
+    "bole": "^1.0.0",
+    "console-stream": "^0.1.1",
     "debug": "^2.1.0",
     "promise": "^6.0.1"
   },
