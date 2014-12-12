@@ -188,10 +188,6 @@ var request = function request(method, path, query, options, callback){
             }
         });
 
-        if (options.timeout) {
-            req.setTimeout(options.timeout);
-        }
-
         req.on('error', function(e){
             debug('Error', e);
             reject(e);
