@@ -32,7 +32,7 @@ var STATUS_CODES = http.STATUS_CODES,
  */
 var request = function request(method, path, query, options, callback){
 
-   return new promise(function(resolve, reject) {
+    return new promise(function(resolve, reject) {
         options = JSON.parse(JSON.stringify(options || {}));
 
         var protocol = options.protocol || 'https',
@@ -215,25 +215,25 @@ var request = function request(method, path, query, options, callback){
 var buffer = function buffer(method, path, query, options, callback){
 
     return request(method, path, query, options).then(function (res) {
-            return new promise(function(resolve, reject){
-                var buf = [],
-                    buffer;
-                res.on('data', function(d) {
-                    if (!Buffer.isBuffer(d)) {
-                        d = new Buffer(d);
-                    }
-                    buf.push(d);
-                });
-                res.on('end', function(){
-                    buffer = new Buffer.concat(buf);
-                    res.body = buffer;
-                    resolve(res);
-                });
-                res.on('error', function(e){
-                    reject(e);
-                });
+        return new promise(function(resolve, reject){
+            var buf = [],
+                buffer;
+            res.on('data', function(d) {
+                if (!Buffer.isBuffer(d)) {
+                    d = new Buffer(d);
+                }
+                buf.push(d);
             });
-        }).nodeify(callback);
+            res.on('end', function(){
+                buffer = new Buffer.concat(buf);
+                res.body = buffer;
+                resolve(res);
+            });
+            res.on('error', function(e){
+                reject(e);
+            });
+        });
+    }).nodeify(callback);
 };
 
 /**
@@ -247,11 +247,11 @@ var buffer = function buffer(method, path, query, options, callback){
 var json = function json(method, path, query, options, callback) {
 
     return buffer(method, path, query, options).then(function(res){
-            if (res.body) {
-                res.body = JSON.parse(res.body.toString('utf-8'));
-            }
-            return res;
-        }).nodeify(callback);
+        if (res.body) {
+            res.body = JSON.parse(res.body.toString('utf-8'));
+        }
+        return res;
+    }).nodeify(callback);
 };
 
 exports = ( module.exports = request );
