@@ -55,7 +55,7 @@
     "docs": "jsdoc index.js README.md && git checkout gh-pages &&  mv out/* . ; git add -u && rm -rf out && git commit -m 'docs: Update' && git push origin gh-pages && git checkout master",
     "style": "jshint index.js test/*.js",
     "test": "npm run style && npm run test-node && npm run test-browser",
-    "test-browser": "browserify test/all-test.js | testling",
+    "test-browser": "browserify --debug test/all-test.js | testling",
     "test-node": "tape test/all-test.js",
     "coverage": "npm run coverage-node && npm run coverage-browser",
     "coverage-browser": "echo \"browserify --debug -t coverify test/all-test.js | node | coverify\" && exit 0",
