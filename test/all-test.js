@@ -30,8 +30,8 @@ test('Promise API', function(t){
         t.pass('Success handled');
     };
 
-    var handle_error = function() {
-        t.pass('Error handled');
+    var handle_error = function(err) {
+        t.ok(err, 'Error is okay here.');
     };
 
     //var fail = function(e) {
@@ -59,7 +59,7 @@ test('Works with callbacks', function(t){
     };
 
     var handle_error = function(err, res) {
-        t.ok(err, 'Error handled');
+        t.ok(err, 'Error is okay here.');
     };
 
     var query = null;
