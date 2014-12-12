@@ -97,7 +97,7 @@ test('Errors', function(t){
 
 });
 
-test('URL path interpolation', function(t){
+test.skip('URL path interpolation', function(t){
 
     t.plan(1);
 
