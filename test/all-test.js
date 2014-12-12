@@ -6,7 +6,6 @@ var test = require('tape');
 
 var collective = require('../index');
 
-
 var options = {
     auth: {
         type: 'basic',
@@ -305,7 +304,7 @@ test('OAuth Authentication token', function(t) {
     };
 
     var query = {
-        uuid: 'efad1d0d-fadf-4a2a-97b7-4f6d453c2d93',
+        uuid: 'efad1d0d-fadf-4a2a-97b7-4f6d453c2d93'
     };
 
     collective('GET', '/address/saved/uuid/:uuid', query, oauth_options)
@@ -328,7 +327,7 @@ test('Bearer token Authentication token', function(t) {
     };
 
     var query = {
-        uuid: 'efad1d0d-fadf-4a2a-97b7-4f6d453c2d93',
+        uuid: 'efad1d0d-fadf-4a2a-97b7-4f6d453c2d93'
     };
 
     collective('GET', '/address/saved/uuid/:uuid', query, bearer_options)
@@ -351,7 +350,7 @@ test('Throws error on unrecognized auth type', function(t) {
     };
 
     var query = {
-        uuid: 'efad1d0d-fadf-4a2a-97b7-4f6d453c2d93',
+        uuid: 'efad1d0d-fadf-4a2a-97b7-4f6d453c2d93'
     };
 
     collective('GET', '/address/saved/uuid/:uuid', query, error_options)
