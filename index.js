@@ -206,6 +206,10 @@ var request = function request(method, path, query, options, callback){
             reject(e);
         });
 
+        req.on('close', function(){
+            log.debug('Request close');
+        });
+
         if (hasBody){
             log.debug('Request send body');
             req.end(body);
