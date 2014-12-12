@@ -135,8 +135,15 @@ var request = function request(method, path, query, options, callback){
             path: full_path,
             headers: headers,
             withCredentials: false
-        }, function(res){
-            debug('STATUS: ' + res.statusCode);
+        });
+
+        req.on('response', function(res){
+
+            res.on('error', function(e) {
+                log.error('Response error', e);
+                reject(e);
+            });
+
             if ([301,302,307].indexOf(res.statusCode) !== -1) {
                 debug('Recevied ' + res.statusCode + ' redirect');
                 var location = url.parse(res.headers.location);
