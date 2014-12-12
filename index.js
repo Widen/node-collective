@@ -163,10 +163,6 @@ var request = function request(method, path, query, options, callback){
                     }
                     buf.push(d);
                 });
-                res.on('error', function(e) {
-                    debug(e);
-                    reject(e);
-                });
                 res.on('end', function(){
                     buffer = new Buffer.concat(buf);
 
