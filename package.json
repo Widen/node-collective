@@ -34,21 +34,14 @@
     "exorcist": "^0.1.6",
     "jsdoc": "^3.3.0-alpha10",
     "jshint": "^2.5.10",
+    "karma": "^0.12.31",
+    "karma-browserify": "^2.0.0",
+    "karma-firefox-launcher": "^0.1.4",
+    "karma-phantomjs-launcher": "^0.1.4",
+    "karma-tap": "^1.0.1",
+    "karma-tape-reporter": "^1.0.1",
     "tape": "^3.0.3",
-    "testling": "^1.7.1",
     "uglify-js": "^2.4.15"
-  },
-  "testling": {
-    "files": "test/*-test.js",
-    "browsers": [
-      "ie/6..latest",
-      "chrome/22..latest",
-      "firefox/16..latest",
-      "safari/latest",
-      "opera/11.0..latest",
-      "iphone/6",
-      "ipad/6"
-    ]
   },
   "browserify": {
     "name": "media-collective",
@@ -58,13 +51,13 @@
     "docs": "jsdoc index.js README.md && git checkout gh-pages &&  mv out/* . ; git add -u && rm -rf out && git commit -m 'docs: Update' && git push origin gh-pages && git checkout master",
     "style": "jshint index.js test/*.js",
     "test": "npm run style && npm run test-node && npm run test-browser",
-    "test-browser": "browserify --debug test/all-test.js | testling",
+    "test-browser": "./node_modules/karma/bin/karma start --no-auto-watch --single-run",
     "test-node": "tape test/all-test.js",
     "coverage": "npm run coverage-node && npm run coverage-browser",
     "coverage-browser": "browserify --debug -t coverify test/all-test.js | node | coverify",
     "coverage-node": "covert test/all-test.js",
     "watch": "echo \"Ok: no 'watch' task specified\" && exit 0",
-    "watch-browser": "echo \"Ok: no 'watch-browser' task specified\" && exit 0",
+    "watch-browser": "./node_modules/karma/bin/karma start --auto-watch",
     "watch-node": "echo \"Ok: no 'watch-node' task specified\" && exit 0",
     "dev": "npm run dev-node && npm run dev-browser",
     "dev-browser": "browserify index.js --debug --standalone collective | exorcist ./static/bundle.map.js > static/bundle.js",
