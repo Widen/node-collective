@@ -77,7 +77,6 @@ var request = function request(method, path, query, options, callback){
                 query = JSON.parse(JSON.stringify(query));
             } catch (ex) {}
             path = path.replace(/\:([^\/\.]+)/g, function(_,p ){
-            //path = path.replace(/\:\w+(?=\/?)/g, function(_, p){
                 if (query[p]){
                     var ret = query[p];
                     delete query[p];
