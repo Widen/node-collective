@@ -9,7 +9,14 @@ var http = require('http'),
 var promise = require('promise'),
     console_stream = require('console-stream'),
     bole = require('bole'),
-    pretty = require('bistre')();
+    pretty = require('bistre')(),
+    FormData;
+
+try {
+    FormData = window.FormData;
+} catch (e) {
+    FormData = require('form-data');
+}
 
 var STATUS_CODES = http.STATUS_CODES,
     PROTOCOLS = { 'http': http, 'https': https },
@@ -64,15 +71,20 @@ var request = function request(method, path, query, options, callback){
                'Query must be an object or null');
 
         // interpolate query with key/val pairs
-        query = JSON.parse(JSON.stringify(query));
-        path = path.replace(/\:([^\/\.]+)/g, function(_,p ){
-        //path = path.replace(/\:\w+(?=\/?)/g, function(_, p){
-            if (query[p]){
-                var ret = query[p];
-                delete query[p];
-                return ret;
-            }
-        });
+
+        if (query && !(query instanceof FormData)) {
+            try {
+                query = JSON.parse(JSON.stringify(query));
+            } catch (ex) {}
+            path = path.replace(/\:([^\/\.]+)/g, function(_,p ){
+            //path = path.replace(/\:\w+(?=\/?)/g, function(_, p){
+                if (query[p]){
+                    var ret = query[p];
+                    delete query[p];
+                    return ret;
+                }
+            });
+        }
 
         var headers = {
             'user-agent': 'node-collective',
@@ -86,9 +98,15 @@ var request = function request(method, path, query, options, callback){
         var body;
         if (hasBody){
             log.debug('Detected request body data');
-            body = JSON.stringify(query) + '\n';
-            headers['content-length'] = Buffer.byteLength(body, 'utf-8');
-            headers['content-type'] = 'application/json; charset=utf-8';
+            if (query instanceof FormData) {
+                body = query;
+                headers['content-length'] = query.knownLength || 0;
+                //headers['content-type'] = 'application/json; charset=utf-8';
+            } else {
+                body = JSON.stringify(query) + '\n';
+                headers['content-length'] = Buffer.byteLength(body, 'utf-8');
+                headers['content-type'] = 'application/json; charset=utf-8';
+            }
         } else if (query !== null){
             log.debug('Detected URL query data');
             headers['content-type'] = 'text/plain; charset=utf-8';
@@ -137,6 +155,7 @@ var request = function request(method, path, query, options, callback){
         log.debug('Protocol: ' + protocol);
         log.debug('Host: ' + host);
         log.debug('Port: ' + port);
+        log.debug('Headers:', headers);
         log.debug('Method: ' + method);
         log.debug('Path: ' + full_path);
 
@@ -211,8 +230,17 @@ var request = function request(method, path, query, options, callback){
         });
 
         if (hasBody){
-            log.debug('Request send body');
-            req.end(body);
+            if (body.pipe && typeof body.pipe === 'function') {
+                log.debug('Pipe-able body');
+                body.pipe(req);
+            }
+            else if (body instanceof FormData) {
+                log.debug('Request FormData body');
+                req.end(body);
+            } else {
+                log.debug('Request send body');
+                req.end(body);
+            }
             log.debug('Request end');
         } else {
             req.end();
@@ -270,7 +298,11 @@ var json = function json(method, path, query, options, callback) {
 
     return buffer(method, path, query, options).then(function(res){
         if (res.body) {
-            res.body = JSON.parse(res.body.toString('utf-8'));
+            try {
+                res.body = JSON.parse(res.body.toString('utf-8'));
+            } catch (e) {
+                res.body = res.body.toString('utf-8');
+            }
         }
         return res;
     }).nodeify(callback);

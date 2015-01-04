@@ -25,6 +25,7 @@
     "bole": "^1.0.0",
     "console-stream": "^0.1.1",
     "debug": "^2.1.0",
+    "form-data": "^0.2.0",
     "promise": "^6.0.1"
   },
   "devDependencies": {
@@ -46,6 +47,9 @@
   "browserify": {
     "name": "media-collective",
     "main": "index.js"
+  },
+  "browser": {
+    "form-data": false
   },
   "scripts": {
     "docs": "jsdoc index.js README.md && git checkout gh-pages &&  mv out/* . ; git add -u && rm -rf out && git commit -m 'docs: Update' && git push origin gh-pages && git checkout master",
