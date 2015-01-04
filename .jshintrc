@@ -1,6 +1,9 @@
 {
     "maxerr"        : 50,       // {int} Maximum error before stopping
-    "globals"       : {},       // additional predefined global variables
+    "globals"       : {         // additional predefined global variables
+        "Promise": true,
+        "FormData": true
+    },
     "browserify"    : true,     // Browserify (node.js code in the browser)
     "browser"       : false,    // Web Browser (window, document, etc)
     "node"          : false,    // Node.js
